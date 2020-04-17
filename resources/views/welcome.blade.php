@@ -3,21 +3,22 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <title>Laravel</title>
-
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <title>Lara User Administration</title>
         <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet">
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet" />
 
-        <!-- Styles -->
-        <style>
-        </style>
     </head>
     <body>
         <div id="app" class="flex-center position-ref full-height">
-            <h1>Hello Wolrd</h1>
-            <example-component />
-            <script src="/js/app.js"></script>
+          <router-view>
+          </router-view>
         </div>
+        <script src="{{ asset('js/app.js') }}"></script>
+        <script>
+        </script>
     </body>
 </html>
