@@ -2,7 +2,7 @@
   <v-app class="grey lighten-4">
     <nav>
       <v-navigation-drawer app v-model="drawer" absolute>
-        <v-list dense nav class="py-5 mt-10">
+        <v-list dense nav class="py-5 mt-8">
           <v-list-item two-line class="px-0">
             <v-list-item-avatar>
               <img src="https://randomuser.me/api/portraits/men/81.jpg" />
@@ -35,13 +35,26 @@
 
         <v-spacer></v-spacer>
 
-        <v-btn icon router to="/login">
-          <v-icon>mdi-heart</v-icon>
-        </v-btn>
+        <template v-if="authenticated">
+          <v-toolbar-items>
+            <v-btn text to="/profile">{{ user.name }}</v-btn>
+          </v-toolbar-items>
 
-        <v-btn icon router to="/logout">
-          <v-icon>mdi-magnify</v-icon>
-        </v-btn>
+          <v-btn icon href="#" @click.prevent="logOut">
+            <v-icon>mdi-logout</v-icon>
+          </v-btn>
+        </template>
+
+        <template v-else>
+          <v-btn text to="/register">
+            Register
+            <v-icon>mdi-account</v-icon>
+          </v-btn>
+          <v-btn text to="/login">
+            Login
+            <v-icon>mdi-login</v-icon>
+          </v-btn>
+        </template>
       </v-app-bar>
     </nav>
     <v-content class="mx-4 mb-4">
@@ -56,6 +69,8 @@
   </v-app>
 </template>
 <script>
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   name: "App",
   components: {},
@@ -63,12 +78,31 @@ export default {
     return {
       drawer: true,
       items: [
-        { title: "Dashboard", icon: "mdi-view-dashboard", route: "/" },
+        { title: "Dashboard", icon: "mdi-view-dashboard", route: "/dashboard" },
         { title: "User", icon: "mdi-account", route: "/users" },
         { title: "Role", icon: "mdi-image", route: "/roles" },
         { title: "Permission", icon: "mdi-cloud-upload", route: "/permissions" }
       ]
     };
+  },
+  computed: {
+    ...mapGetters({
+      authenticated: "auth/authenticated",
+      user: "auth/user"
+    })
+  },
+  methods: {
+    ...mapActions({
+      signOutAction: "auth/signOut"
+    }),
+
+    logOut() {
+      this.signOutAction().then(() => {
+        this.$router.replace({
+          path: "/"
+        });
+      });
+    }
   }
 };
 </script>

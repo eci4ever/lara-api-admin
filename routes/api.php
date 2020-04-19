@@ -24,7 +24,8 @@ Route::group(['prefix' => 'v1', 'as' => 'public.', 'namespace' => 'Api\V1\Auth']
 
 Route::group(['prefix' => 'v1', 'as' => 'admin.', 'namespace' => 'Api\V1', 'middleware' => ['auth:api']], function () {
     Route::post('logout', 'Auth\LogoutController@logout')->name('logout');
-    Route::get('user', 'UserController@index')->name('user.user');
+    Route::get('me', 'UserController@me')->name('me');
+    Route::apiResource('user', 'UserController');
     Route::apiResource('permission', 'PermissionController');
 });
 
