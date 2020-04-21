@@ -21,12 +21,28 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        return User::create($request->all());
+        $this->validate($request, [
+            'name' => 'required|min:3',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6',
+        ]);
+ 
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password)
+        ]);
+
+        $registerToken = $user->createToken($request->email)->accessToken;
+
+        return $user;
     }
 
     public function update(Request $request, User $user)
     {
-        return $user->update($request->all());
+        $user->update($request->all());
+
+        return $user;
     }
 
     public function show(User $user)

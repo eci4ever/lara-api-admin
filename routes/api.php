@@ -26,6 +26,8 @@ Route::group(['prefix' => 'v1', 'as' => 'admin.', 'namespace' => 'Api\V1', 'midd
     Route::post('logout', 'Auth\LogoutController@logout')->name('logout');
     Route::get('me', 'UserController@me')->name('me');
     Route::apiResource('user', 'UserController');
+    Route::apiResource('role', 'RoleController');
+    Route::delete('permission/destroy', 'PermissionController@massDestroy')->name('permissions.massDestroy');
     Route::apiResource('permission', 'PermissionController');
 });
 

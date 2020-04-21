@@ -22,6 +22,30 @@ const routes = [
         }
     },
     {
+        path: '/roles',
+        component: () => import("./components/admin/Role.vue"),
+        beforeEnter: (to, from, next) => {
+            if (!store.getters['auth/authenticated']) {
+                return next({
+                    path: '/login'
+                })
+            }
+            next()
+        }
+    },
+    {
+        path: '/permissions',
+        component: () => import("./components/admin/Permission.vue"),
+        beforeEnter: (to, from, next) => {
+            if (!store.getters['auth/authenticated']) {
+                return next({
+                    path: '/login'
+                })
+            }
+            next()
+        }
+    },
+    {
         path: '/dashboard',
         component: () => import("./components/views/Dashboard.vue"),
         beforeEnter: (to, from, next) => {
