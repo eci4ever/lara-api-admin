@@ -5,7 +5,7 @@
       :headers="headers"
       :items="users"
       sort-by="id"
-      show-select
+      dense
       class="elevation-1"
     >
       <template v-slot:top>
@@ -25,7 +25,7 @@
               <v-card-text>
                 <v-container>
                   <v-row>
-                    <v-col cols="12" sm="6" md="4">
+                    <v-col cols="12" sm="6" md="6">
                       <v-text-field v-model="editedItem.name" label="Name"></v-text-field>
                     </v-col>
                     <template v-if="formTitle === 'New User'">
@@ -41,6 +41,23 @@
                       </v-col>
                     </template>
                   </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-autocomplete
+                        v-model="editedItem.roles"
+                        :items="roleList"
+                        item-text="title"
+                        item-value="id"
+                        dense
+                        chips
+                        deletable-chips
+                        small-chips
+                        hide-selected
+                        multiple
+                        return-object
+                      ></v-autocomplete>
+                    </v-col>
+                  </v-row>
                 </v-container>
               </v-card-text>
 
@@ -52,6 +69,11 @@
             </v-card>
           </v-dialog>
         </v-toolbar>
+      </template>
+      <template v-slot:item.roles="{ item }">
+        <span v-for="list in item.roles" :key="list.id">
+          <v-chip small color="success">{{ list.title }}</v-chip>
+        </span>
       </template>
       <template v-slot:item.actions="{ item }">
         <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
@@ -78,16 +100,19 @@ export default {
         align: "start",
         value: "name"
       },
-      { text: "Email", value: "email" },
+      { text: "Roles", value: "roles" },
       { text: "Actions", value: "actions", sortable: false }
     ],
     editedIndex: -1,
     editedItem: {
       name: "",
-      email: ""
+      email: "",
+      roles: []
     },
     defaultItem: {
-      name: ""
+      name: "",
+      email: "",
+      roles: []
     }
   }),
 
@@ -98,7 +123,8 @@ export default {
   computed: {
     ...mapGetters({
       users: "user/users",
-      user: "auth/user"
+      user: "auth/user",
+      roleList: "role/roles"
     }),
 
     formTitle() {
@@ -121,6 +147,7 @@ export default {
 
     initialize() {
       this.$store.dispatch("user/getAllUsers");
+      this.$store.dispatch("role/getAllRoles");
     },
 
     editItem(item) {
@@ -153,6 +180,7 @@ export default {
         this.addUser(this.editedItem);
       }
       this.close();
+      this.initialize();
     }
   }
 };

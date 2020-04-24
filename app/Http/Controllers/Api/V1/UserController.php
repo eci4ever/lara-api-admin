@@ -11,12 +11,23 @@ class UserController extends Controller
 {
     public function me()
     {
-        return response(['user' => Auth::user()], 200);
+        
+        $user =  auth()->user();
+
+        $user->load("roles.permissions");
+
+        return $user;
+        //if want to return multiple props
+        //return response(['user' => Auth::user()], 200);
     }
 
     public function index()
     {
-        return User::all();
+        $users = User::all();
+
+        $users->load("roles");
+
+        return $users;
     }
 
     public function store(Request $request)
@@ -35,12 +46,16 @@ class UserController extends Controller
 
         $registerToken = $user->createToken($request->email)->accessToken;
 
+        $user->roles()->sync($request->input("roles.*.id", []));
+
         return $user;
     }
 
     public function update(Request $request, User $user)
     {
         $user->update($request->all());
+
+        $user->roles()->sync($request->input("roles.*.id", []));
 
         return $user;
     }

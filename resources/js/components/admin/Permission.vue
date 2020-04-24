@@ -7,6 +7,7 @@
       sort-by="id"
       :sort-desc="true"
       show-select
+      dense
       class="elevation-1"
     >
       <template v-slot:top>
@@ -74,7 +75,6 @@ export default {
           sortable: false,
           value: "title"
         },
-        { text: "Permission", value: "id", sortable: false },
         { text: "Actions", value: "actions", sortable: false }
       ],
       editedIndex: -1,

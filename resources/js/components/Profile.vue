@@ -5,6 +5,15 @@
         <div class="overline mb-4">USER PROFILE</div>
         <v-list-item-title class="headline mb-1">{{ user.name }}</v-list-item-title>
         <v-list-item-subtitle>{{ user.email }}</v-list-item-subtitle>
+        <v-list-item-content>
+          <span v-for="role in user.roles" :key="role.id">
+            Your Role {{ role.title }}
+            <span
+              v-for="permission in role.permissions"
+              :key="permission.id"
+            >{{ permission.title }}</span>
+          </span>
+        </v-list-item-content>
       </v-list-item-content>
 
       <v-list-item-avatar tile size="80" color="grey"></v-list-item-avatar>

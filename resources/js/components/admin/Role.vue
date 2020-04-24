@@ -5,7 +5,7 @@
       :headers="headers"
       :items="roles"
       sort-by="id"
-      show-select
+      dense
       class="elevation-1"
     >
       <template v-slot:top>
@@ -19,13 +19,30 @@
             </template>
             <v-card>
               <v-card-title>
-                <span class="headline">{{ formTitle }}</span>
+                <span>{{ formTitle }}</span>
               </v-card-title>
               <v-card-text>
                 <v-container>
                   <v-row>
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field v-model="editedItem.title" label="Title"></v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-autocomplete
+                        v-model="editedItem.permissions"
+                        :items="permissionList"
+                        item-text="title"
+                        item-value="id"
+                        dense
+                        chips
+                        deletable-chips
+                        small-chips
+                        hide-selected
+                        multiple
+                        return-object
+                      ></v-autocomplete>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -38,6 +55,11 @@
             </v-card>
           </v-dialog>
         </v-toolbar>
+      </template>
+      <template v-slot:item.permissions="{ item }">
+        <span v-for="list in item.permissions" :key="list.id">
+          <v-chip small color="info">{{ list.title }}</v-chip>
+        </span>
       </template>
       <template v-slot:item.actions="{ item }">
         <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
@@ -61,17 +83,20 @@ export default {
           text: "Title",
           align: "start",
           sortable: false,
-          value: "title"
+          value: "title",
+          width: "10%"
         },
-        { text: "Permission", value: "id", sortable: false },
+        { text: "Permission", value: "permissions", sortable: false },
         { text: "Actions", value: "actions", sortable: false }
       ],
       editedIndex: -1,
       editedItem: {
-        title: ""
+        title: "",
+        permissions: []
       },
       defaultItem: {
-        title: ""
+        title: "",
+        permissions: []
       }
     };
   },
@@ -82,7 +107,8 @@ export default {
 
   computed: {
     ...mapGetters({
-      roles: "role/roles"
+      roles: "role/roles",
+      permissionList: "permission/permissions"
     }),
 
     formTitle() {
@@ -105,6 +131,7 @@ export default {
 
     initialize() {
       this.$store.dispatch("role/getAllRoles");
+      this.$store.dispatch("permission/getAllPermissions");
     },
 
     editItem(item) {
@@ -133,6 +160,7 @@ export default {
         this.addRole(this.editedItem);
       }
       this.close();
+      this.initialize();
     }
   }
 };

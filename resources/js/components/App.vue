@@ -16,15 +16,33 @@
 
           <v-divider></v-divider>
 
-          <v-list-item v-for="item in items" :key="item.title" router :to="item.route">
+          <v-list-item to="dashboard">
             <v-list-item-icon>
-              <v-icon>{{ item.icon }}</v-icon>
+              <v-icon>mdi-view-dashboard</v-icon>
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
+              <v-list-item-title>Dashboard</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+
+          <template v-if="hasRole === 'admin'">
+            <v-list-group prepend-icon="account_circle">
+              <template v-slot:activator>
+                <v-list-item-title>User Admin</v-list-item-title>
+              </template>
+
+              <v-list-item v-for="item in items" :key="item.title" router :to="item.route">
+                <v-list-item-icon>
+                  <v-icon>{{ item.icon }}</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                  <v-list-item-title>{{ item.title }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-group>
+          </template>
         </v-list>
       </v-navigation-drawer>
 
@@ -78,7 +96,6 @@ export default {
     return {
       drawer: true,
       items: [
-        { title: "Dashboard", icon: "mdi-view-dashboard", route: "/dashboard" },
         { title: "User", icon: "mdi-account", route: "/users" },
         { title: "Role", icon: "mdi-image", route: "/roles" },
         { title: "Permission", icon: "mdi-cloud-upload", route: "/permissions" }
@@ -89,7 +106,11 @@ export default {
     ...mapGetters({
       authenticated: "auth/authenticated",
       user: "auth/user"
-    })
+    }),
+
+    hasRole() {
+      return "admin";
+    }
   },
   methods: {
     ...mapActions({

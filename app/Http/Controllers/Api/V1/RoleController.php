@@ -12,17 +12,25 @@ class RoleController extends Controller
     {
         $roles = Role::all();
 
+        $roles->load("permissions");
+
         return $roles;
     }
 
     public function store(Request $request)
     {
-        return Role::create($request->all());
+        $role = Role::create($request->all());
+
+        $role->permissions()->sync($request->input("permissions.*.id", []));
+
+        return $role;
     }
 
     public function update(Request $request, Role $role)
     {
         $role->update($request->all());
+
+        $role->permissions()->sync($request->input("permissions.*.id", []));
 
         return $role;
     }

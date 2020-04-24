@@ -54,6 +54,7 @@ export default {
         },
 
         removeRole({ commit }, payload) {
+            console.log(payload.id)
             axios.delete("role/" + payload.id).then(() => {
                 commit("DELETE_ROLE", payload.id)
             })
